@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="home">
+  <h1 class="home__title">今日の服を選ぼう</h1>
+  <p class="home__subtitle">Outfit Of The Day</p>
+
+  <div class="home__buttons">
+    <a href="{{ url_for('clothing.register') }}" class="btn btn--primary">
+      📷 服を登録する
+    </a>
+    <a href="#" class="btn btn--secondary">
+      👗 クローゼットを見る
+    </a>
+  </div>
+</div>
+{% endblock %}

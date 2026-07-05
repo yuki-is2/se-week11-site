@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2 class="card__title">プレビュー確認</h2>
+  <p class="card__desc">背景が除去されました。カテゴリと季節を選んで保存してください</p>
+
+  <div class="preview-box preview-box--result">
+    <img
+      src="{{ url_for('static', filename=image_path) }}"
+      alt="背景除去後の服"
+      class="preview-box__img"
+    >
+  </div>
+
+  <form method="POST" class="form">
+    <div class="form__group">
+      <label class="form__label" for="category">カテゴリ <span class="required">*</span></label>
+      <select class="form__select" id="category" name="category" required>
+        <option value="">選択してください</option>
+        {% for cat in categories %}
+          <option value="{{ cat }}">{{ cat }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form__group">
+      <label class="form__label" for="season">季節 <span class="required">*</span></label>
+      <select class="form__select" id="season" name="season" required>
+        <option value="">選択してください</option>
+        {% for s in seasons %}
+          <option value="{{ s }}">{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form__actions">
+      <button type="submit" class="btn btn--primary">💾 クローゼットに保存</button>
+      <a href="{{ url_for('clothing.register') }}" class="btn btn--ghost">
+        🔄 再撮影する
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

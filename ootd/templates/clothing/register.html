@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2 class="card__title">服を登録する</h2>
+  <p class="card__desc">写真を選ぶと、自動で背景を除去します</p>
+
+  <form method="POST" enctype="multipart/form-data" class="form">
+    <div class="form__group">
+      <label class="form__label" for="image">服の写真</label>
+      <input
+        class="form__input"
+        type="file"
+        id="image"
+        name="image"
+        accept=".jpg,.jpeg,.png,.heic"
+        required
+      >
+      <span class="form__hint">対応形式：JPG / PNG / HEIC（最大10MB）</span>
+    </div>
+
+    {# プレビュー（JS で即時表示）#}
+    <div id="preview-box" class="preview-box" style="display:none">
+      <img id="preview-img" src="" alt="選択した画像">
+    </div>
+
+    <div class="form__actions">
+      <button type="submit" class="btn btn--primary">
+        ✨ 背景を除去してプレビュー
+      </button>
+      <a href="{{ url_for('index') }}" class="btn btn--ghost">キャンセル</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  // 選択直後にその場でプレビュー表示
+  document.getElementById('image').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      document.getElementById('preview-img').src = ev.target.result;
+      document.getElementById('preview-box').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+</script>
+{% endblock %}
