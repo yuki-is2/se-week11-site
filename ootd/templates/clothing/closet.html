@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="closet">
+  <h2 class="closet__title">クローゼット</h2>
+
+  {# 服が0件のときのガイド表示（NF-U07対応）#}
+  {% if not clothes %}
+    <div class="empty-state">
+      <p class="empty-state__icon">👗</p>
+      <p class="empty-state__text">まだ服が登録されていません</p>
+      <a href="{{ url_for('clothing.register') }}" class="btn btn--primary">
+        📷 最初の服を登録する
+      </a>
+    </div>
+
+  {% else %}
+
+    {# フィルタ（S-02対応）#}
+    <form method="GET" class="filter">
+      <select name="category" class="filter__select" onchange="this.form.submit()">
+        <option value="">すべてのカテゴリ</option>
+        {% for cat in categories %}
+          <option value="{{ cat }}"
+            {% if cat == selected_category %}selected{% endif %}>
+            {{ cat }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <select name="season" class="filter__select" onchange="this.form.submit()">
+        <option value="">すべての季節</option>
+        {% for s in seasons %}
+          <option value="{{ s }}"
+            {% if s == selected_season %}selected{% endif %}>
+            {{ s }}
+          </option>
+        {% endfor %}
+      </select>
+
+      {% if selected_category or selected_season %}
+        <a href="{{ url_for('clothing.closet') }}" class="filter__reset">
+          ✕ リセット
+        </a>
+      {% endif %}
+    </form>
+
+    {# 服一覧グリッド #}
+    <div class="grid">
+      {% for item in clothes %}
+        <div class="grid__item">
+          <div class="grid__img-wrap">
+            <img
+              src="{{ url_for('static', filename='uploads/' + item.image_path.split('uploads/')[-1]) }}"
+              alt="{{ item.category }}"
+              class="grid__img"
+            >
+          </div>
+          <div class="grid__info">
+            <span class="badge">{{ item.category }}</span>
+            <span class="badge badge--season">{{ item.season }}</span>
+          </div>
+
+          {# 削除ボタン（NF-U05: 確認ダイアログ対応）#}
+          <form
+            method="POST"
+            action="{{ url_for('clothing.delete', clothing_id=item.id) }}"
+            onsubmit="return confirm('この服を削除しますか？');"
+          >
+            <button type="submit" class="btn-delete">🗑 削除</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+
+  {% endif %}
+
+  <div class="closet__footer">
+    <a href="{{ url_for('clothing.register') }}" class="btn btn--primary">
+      📷 服を追加する
+    </a>
+    <a href="{{ url_for('index') }}" class="btn btn--ghost">
+      ← ホームに戻る
+    </a>
+  </div>
+</div>
+
+{% endblock %}

@@ -6,7 +6,7 @@
 
   <div class="preview-box preview-box--result">
     <img
-      src="{{ url_for('static', filename=image_path) }}"
+      src="{{ url_for('static', filename='uploads/' + image_path.split('uploads/')[-1]) }}"
       alt="背景除去後の服"
       class="preview-box__img"
     >

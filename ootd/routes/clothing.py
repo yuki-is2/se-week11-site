@@ -36,7 +36,7 @@ def register():
         return render_template("clothing/register.html")
 
     # プレビュー用に一時保存（sessionに画像パスを保持）
-    session["preview_image"] = str(relative_path)
+    session["preview_image"] = str(relative_path).replace("\\", "/")
     return redirect(url_for("clothing.preview"))
 
 
@@ -103,3 +103,65 @@ def preview():
         )
     finally:
         db.close()
+
+# ───────────────────────────────
+# クローゼット一覧（S-01, S-02対応）
+# ───────────────────────────────
+@clothing_bp.route("/closet")
+def closet():
+    category = request.args.get("category", "")
+    season = request.args.get("season", "")
+
+    db = SessionLocal()
+    try:
+        query = db.query(Clothing)
+
+        # フィルタ適用（S-02対応）
+        if category:
+            query = query.filter(Clothing.category == category)
+        if season:
+            query = query.filter(Clothing.season == season)
+
+        clothes = query.order_by(Clothing.created_at.desc()).all()
+    finally:
+        db.close()
+
+    return render_template(
+        "clothing/closet.html",
+        clothes=clothes,
+        categories=CATEGORIES,
+        seasons=SEASONS,
+        selected_category=category,
+        selected_season=season,
+    )
+
+
+# ───────────────────────────────
+# 服の削除（S-04対応）
+# ───────────────────────────────
+@clothing_bp.route("/delete/<int:clothing_id>", methods=["POST"])
+def delete(clothing_id):
+    db = SessionLocal()
+    try:
+        clothing = db.query(Clothing).filter(Clothing.id == clothing_id).first()
+
+        if not clothing:
+            flash("指定した服が見つかりませんでした。", "error")
+            return redirect(url_for("clothing.closet"))
+
+        # 画像ファイルも削除（I-01対応）
+        from config import UPLOAD_FOLDER
+        image_file = UPLOAD_FOLDER / clothing.image_path.split("uploads/")[-1]
+        if image_file.exists():
+            image_file.unlink()
+
+        db.delete(clothing)
+        db.commit()
+        flash("服を削除しました。", "success")
+    except Exception:
+        db.rollback()
+        flash("削除中にエラーが発生しました。", "error")
+    finally:
+        db.close()
+
+    return redirect(url_for("clothing.closet"))
