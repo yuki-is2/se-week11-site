@@ -106,3 +106,12 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f7f7f5; co
   border-radius: 8px;
 }
 .grid__checkbox:checked ~ .grid__check-mark { display: block; }
+
+/* ===== OOTD ===== */
+.ootd-date { font-size: .8rem; color: #888; margin: .4rem 0 .3rem; }
+.ootd-memo { font-size: .8rem; color: #555; margin: .4rem 0;
+             background: #f7f7f5; border-radius: 6px; padding: .4rem .6rem; }
+.form__textarea { width: 100%; padding: .7rem .9rem; border: 1.5px solid #ddd;
+                  border-radius: 8px; font-size: 1rem; background: #fafafa;
+                  resize: vertical; font-family: inherit; }
+.form__textarea:focus { outline: none; border-color: #333; }

@@ -19,5 +19,6 @@ def get_db():
 def init_db():
     """テーブルを初期化する"""
     from models.clothing import Clothing  # 循環import回避
+    from models.ootd_log import OotdLog  # 追加
     Base.metadata.create_all(engine)
     print("[DB] テーブルの初期化が完了しました")

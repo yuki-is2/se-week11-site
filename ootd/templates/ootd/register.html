@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card">
+  <h2 class="card__title">今日のOOTDに登録</h2>
+  <p class="card__desc">{{ today }} のコーディネートを記録します</p>
+
+  <div class="preview-box preview-box--result" style="margin-bottom:1.5rem">
+    <img
+      src="{{ url_for('static', filename=result_path) }}"
+      alt="コーディネート"
+      class="preview-box__img"
+    >
+  </div>
+
+  <form method="POST" class="form">
+
+    <div class="form__group">
+      <label class="form__label" for="weather">天気（任意）</label>
+      <select class="form__select" id="weather" name="weather">
+        <option value="">選択しない</option>
+        {% for w in weather_options %}
+          <option value="{{ w }}">{{ w }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form__group">
+      <label class="form__label" for="season">季節（任意）</label>
+      <select class="form__select" id="season" name="season">
+        <option value="">選択しない</option>
+        {% for s in seasons %}
+          <option value="{{ s }}">{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form__group">
+      <label class="form__label" for="memo">
+        メモ（任意・200文字以内）
+      </label>
+      <textarea
+        class="form__textarea"
+        id="memo"
+        name="memo"
+        maxlength="200"
+        placeholder="今日の気分や着こなしのポイントなど..."
+        rows="3"
+      ></textarea>
+      <span class="form__hint">
+        <span id="memo-count">0</span> / 200文字
+      </span>
+    </div>
+
+    <div class="form__actions">
+      <button type="submit" class="btn btn--primary">
+        💾 OOTDを保存する
+      </button>
+      <a href="{{ url_for('clothing.coord_result') }}" class="btn btn--ghost">
+        ← 戻る
+      </a>
+    </div>
+
+  </form>
+</div>
+
+<script>
+  const memo = document.getElementById('memo');
+  const count = document.getElementById('memo-count');
+  memo.addEventListener('input', () => {
+    count.textContent = memo.value.length;
+  });
+</script>
+
+{% endblock %}

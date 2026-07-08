@@ -14,6 +14,10 @@
   </div>
 
   <div class="form__actions" style="margin-top:1.5rem">
+    {# OOTDに登録ボタンを追加 #}
+    <a href="{{ url_for('ootd.register') }}" class="btn btn--primary">
+      📅 今日のOOTDに登録する
+    </a>
     <a href="{{ url_for('clothing.coordinate') }}" class="btn btn--secondary">
       🔄 服を選び直す
     </a>

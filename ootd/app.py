@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from database import init_db
 from routes.clothing import clothing_bp
+from routes.ootd import ootd_bp          # 追加
 import config
 
 app = Flask(__name__)
@@ -9,6 +10,7 @@ app.config["MAX_CONTENT_LENGTH"] = config.MAX_CONTENT_LENGTH
 
 # Blueprintを登録
 app.register_blueprint(clothing_bp)
+app.register_blueprint(ootd_bp)          # 追加
 
 @app.route("/")
 def index():

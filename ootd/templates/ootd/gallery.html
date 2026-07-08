@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="closet">
+  <h2 class="closet__title">OOTDギャラリー</h2>
+
+  {% if not logs %}
+    <div class="empty-state">
+      <p class="empty-state__icon">📅</p>
+      <p class="empty-state__text">まだOOTDが登録されていません</p>
+      <a href="{{ url_for('clothing.coordinate') }}" class="btn btn--primary">
+        ✨ コーディネートを作る
+      </a>
+    </div>
+
+  {% else %}
+    <div class="grid">
+      {% for log in logs %}
+        <div class="grid__item">
+          <div class="grid__img-wrap">
+            <img
+              src="{{ url_for('static', filename=log.snapshot_path) }}"
+              alt="OOTD"
+              class="grid__img"
+            >
+          </div>
+
+          <p class="ootd-date">📅 {{ log.date }}</p>
+
+          <div class="grid__info">
+            {% if log.weather %}
+              <span class="badge">{{ log.weather }}</span>
+            {% endif %}
+            {% if log.season %}
+              <span class="badge badge--season">{{ log.season }}</span>
+            {% endif %}
+          </div>
+
+          {% if log.memo %}
+            <p class="ootd-memo">{{ log.memo }}</p>
+          {% endif %}
+
+          {# 削除ボタン（NF-U05: 確認ダイアログ対応）#}
+          <form
+            method="POST"
+            action="{{ url_for('ootd.delete', log_id=log.id) }}"
+            onsubmit="return confirm('このOOTDを削除しますか？');"
+          >
+            <button type="submit" class="btn-delete">🗑 削除</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="closet__footer">
+    <a href="{{ url_for('clothing.coordinate') }}" class="btn btn--primary">
+      ✨ 新しいコーディネートを作る
+    </a>
+    <a href="{{ url_for('index') }}" class="btn btn--ghost">
+      ← ホームに戻る
+    </a>
+  </div>
+</div>
+
+{% endblock %}
