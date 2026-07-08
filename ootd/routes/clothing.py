@@ -165,3 +165,76 @@ def delete(clothing_id):
         db.close()
 
     return redirect(url_for("clothing.closet"))
+
+# ───────────────────────────────
+# コーディネート画面（C-04〜06対応）
+# ───────────────────────────────
+@clothing_bp.route("/coordinate", methods=["GET", "POST"])
+def coordinate():
+    db = SessionLocal()
+    try:
+        clothes = db.query(Clothing).order_by(Clothing.created_at.desc()).all()
+        clothes_data = [c.to_dict() for c in clothes]
+    finally:
+        db.close()
+
+    return render_template(
+        "clothing/coordinate.html",
+        clothes=clothes_data,
+        categories=CATEGORIES,
+        seasons=SEASONS,
+    )
+
+
+@clothing_bp.route("/coordinate/composite", methods=["POST"])
+def composite():
+    # 選択された服のIDリストを取得
+    selected_ids = request.form.getlist("selected_ids")
+
+    if not selected_ids:
+        flash("服を1着以上選択してください。", "error")
+        return redirect(url_for("clothing.coordinate"))
+
+    db = SessionLocal()
+    try:
+        clothes = db.query(Clothing).filter(
+            Clothing.id.in_([int(i) for i in selected_ids])
+        ).all()
+    finally:
+        db.close()
+
+    if not clothes:
+        flash("選択した服が見つかりませんでした。", "error")
+        return redirect(url_for("clothing.coordinate"))
+
+    # 画像合成（C-04対応）
+    from config import BASE_DIR
+    mannequin_path = BASE_DIR / "static" / "mannequin.png"
+    clothing_paths = [c.image_path for c in clothes]
+
+    try:
+        from services.image_service import composite_on_mannequin
+        categories = [c.category for c in clothes]
+        result_path = composite_on_mannequin(clothing_paths, mannequin_path, categories)
+    except Exception as e:
+        flash(f"合成中にエラーが発生しました：{str(e)}", "error")
+        return redirect(url_for("clothing.coordinate"))
+
+    # 合成結果とOOTD登録用データをセッションに保存
+    session["coord_result"] = result_path
+    session["coord_clothing_ids"] = [int(i) for i in selected_ids]
+
+    return redirect(url_for("clothing.coord_result"))
+
+
+@clothing_bp.route("/coordinate/result")
+def coord_result():
+    result_path = session.get("coord_result")
+    if not result_path:
+        flash("先にコーディネートを作成してください。", "error")
+        return redirect(url_for("clothing.coordinate"))
+
+    return render_template(
+        "clothing/coord_result.html",
+        result_path=result_path,
+    )

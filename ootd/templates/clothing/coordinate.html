@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card">
+  <h2 class="card__title">コーディネートを作る</h2>
+  <p class="card__desc">着合わせたい服を選んでください（複数選択可）</p>
+
+  {% if not clothes %}
+    <div class="empty-state">
+      <p class="empty-state__icon">👗</p>
+      <p class="empty-state__text">服が登録されていません</p>
+      <a href="{{ url_for('clothing.register') }}" class="btn btn--primary">
+        📷 服を登録する
+      </a>
+    </div>
+
+  {% else %}
+
+    <form method="POST" action="{{ url_for('clothing.composite') }}">
+      {# 選択カウント表示 #}
+      <div class="select-count">
+        <span id="count">0</span>着選択中
+      </div>
+
+      {# 服一覧グリッド（選択式）#}
+      <div class="grid grid--selectable">
+        {% for item in clothes %}
+          <label class="grid__item grid__item--selectable" for="item-{{ item.id }}">
+            <input
+              type="checkbox"
+              id="item-{{ item.id }}"
+              name="selected_ids"
+              value="{{ item.id }}"
+              class="grid__checkbox"
+              onchange="updateCount()"
+            >
+            <div class="grid__img-wrap">
+              <img
+                src="{{ url_for('static', filename='uploads/' + item.image_path.split('uploads/')[-1]) }}"
+                alt="{{ item.category }}"
+                class="grid__img"
+              >
+            </div>
+            <div class="grid__info">
+              <span class="badge">{{ item.category }}</span>
+              <span class="badge badge--season">{{ item.season }}</span>
+            </div>
+            <div class="grid__check-mark">✓</div>
+          </label>
+        {% endfor %}
+      </div>
+
+      <div class="form__actions" style="margin-top:1.5rem">
+        <button type="submit" class="btn btn--primary" id="composite-btn" disabled>
+          ✨ マネキンに着せる
+        </button>
+        <a href="{{ url_for('clothing.closet') }}" class="btn btn--ghost">
+          ← クローゼットに戻る
+        </a>
+      </div>
+    </form>
+
+  {% endif %}
+</div>
+
+<script>
+  function updateCount() {
+    const checked = document.querySelectorAll('.grid__checkbox:checked').length;
+    document.getElementById('count').textContent = checked;
+    document.getElementById('composite-btn').disabled = checked === 0;
+  }
+</script>
+
+{% endblock %}

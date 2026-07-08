@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card">
+  <h2 class="card__title">コーディネート完成！</h2>
+  <p class="card__desc">マネキンに着せた結果です</p>
+
+  <div class="preview-box preview-box--result">
+    <img
+      src="{{ url_for('static', filename=result_path) }}"
+      alt="コーディネート結果"
+      class="preview-box__img"
+    >
+  </div>
+
+  <div class="form__actions" style="margin-top:1.5rem">
+    <a href="{{ url_for('clothing.coordinate') }}" class="btn btn--secondary">
+      🔄 服を選び直す
+    </a>
+    <a href="{{ url_for('index') }}" class="btn btn--ghost">
+      ← ホームに戻る
+    </a>
+  </div>
+</div>
+
+{% endblock %}

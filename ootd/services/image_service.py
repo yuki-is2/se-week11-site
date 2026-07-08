@@ -53,3 +53,57 @@ def remove_background(file) -> Path:
 
     # テンプレートから参照できる相対パスを返す
     return Path("uploads") / filename
+
+def composite_on_mannequin(clothing_paths: list, mannequin_path: Path, categories: list = None) -> str:
+    """
+    マネキン画像に複数の服を重ねて合成する（C-04, C-06対応）
+    カテゴリに応じて配置位置・サイズを調整する
+    """
+    if not mannequin_path.exists():
+        raise ImageServiceError("マネキン画像が見つかりません。static/mannequin.png を確認してください。")
+
+    base = Image.open(mannequin_path).convert("RGBA")
+    base_w, base_h = base.size  # 300 x 600
+
+    # カテゴリごとの配置設定（位置・サイズ）
+    LAYOUT = LAYOUT = {
+        "トップス":     {"x": 0.32, "y": 0.16, "w": 0.45, "h": 0.35},
+        "アウター":     {"x": 0.05, "y": 0.16, "w": 0.90, "h": 0.45},
+        "ボトムス":     {"x": 0.20, "y": 0.45, "w": 0.70, "h": 0.42},
+        "ワンピース":   {"x": 0.10, "y": 0.18, "w": 0.80, "h": 0.75},
+        "シューズ":     {"x": 0.20, "y": 0.85, "w": 0.60, "h": 0.12},
+        "バッグ":       {"x": 0.60, "y": 0.42, "w": 0.35, "h": 0.25},
+        "アクセサリー": {"x": 0.35, "y": 0.03, "w": 0.30, "h": 0.10},
+    }
+    DEFAULT_LAYOUT = {"x": 0.10, "y": 0.22, "w": 0.80, "h": 0.38}
+
+    for i, rel_path in enumerate(clothing_paths):
+        clothing_file = UPLOAD_FOLDER / rel_path.split("uploads/")[-1]
+        if not clothing_file.exists():
+            continue
+
+        # カテゴリに応じたレイアウトを取得
+        category = categories[i] if categories and i < len(categories) else None
+        layout = LAYOUT.get(category, DEFAULT_LAYOUT)
+
+        # 配置サイズを計算
+        paste_w = int(base_w * layout["w"])
+        paste_h = int(base_h * layout["h"])
+        paste_x = int(base_w * layout["x"])
+        paste_y = int(base_h * layout["y"])
+
+        # 服の画像をリサイズ
+        clothing_img = Image.open(clothing_file).convert("RGBA")
+        clothing_img = clothing_img.resize((paste_w, paste_h), Image.LANCZOS)
+
+        # 透明レイヤーに貼り付けて合成
+        layer = Image.new("RGBA", base.size, (0, 0, 0, 0))
+        layer.paste(clothing_img, (paste_x, paste_y))
+        base = Image.alpha_composite(base, layer)
+
+    # 合成結果を保存
+    filename = f"coord_{uuid.uuid4().hex}.png"
+    save_path = UPLOAD_FOLDER / filename
+    base.save(save_path, format="PNG")
+
+    return str(Path("uploads") / filename).replace("\\", "/")

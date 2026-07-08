@@ -88,3 +88,21 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f7f7f5; co
               border-radius: 8px; background: #fff0f0; color: #b91c1c;
               font-size: .8rem; cursor: pointer; }
 .btn-delete:active { opacity: .75; }
+
+/* ===== 選択カウント ===== */
+.select-count { font-size: .875rem; color: #888; margin-bottom: .75rem; }
+
+/* ===== 選択式グリッド ===== */
+.grid__item--selectable { position: relative; cursor: pointer; }
+.grid__checkbox { display: none; }
+.grid__check-mark {
+  display: none; position: absolute; top: .5rem; right: .5rem;
+  background: #333; color: #fff; border-radius: 50%;
+  width: 1.5rem; height: 1.5rem; text-align: center;
+  line-height: 1.5rem; font-size: .8rem;
+}
+.grid__checkbox:checked ~ .grid__img-wrap {
+  outline: 2.5px solid #333;
+  border-radius: 8px;
+}
+.grid__checkbox:checked ~ .grid__check-mark { display: block; }
