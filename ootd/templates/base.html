@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ootd</title>
+  <title>ootd 👗</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
@@ -12,11 +14,12 @@
   </header>
 
   <main class="main">
-    {# フラッシュメッセージ（NF-U04対応）#}
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
-          <div class="alert alert--{{ category }}">{{ message }}</div>
+          <div class="alert alert--{{ category }}">
+            {{ '✅' if category == 'success' else '⚠️' }} {{ message }}
+          </div>
         {% endfor %}
       {% endif %}
     {% endwith %}

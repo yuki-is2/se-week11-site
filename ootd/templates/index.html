@@ -1,22 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="home">
-  <h1 class="home__title">今日の服を選ぼう</h1>
+  <h1 class="home__title">ootd 👗</h1>
   <p class="home__subtitle">Outfit Of The Day</p>
+  <p class="home__catch">✨ 今日のコーデを見つけよう ✨</p>
 
   <div class="home__buttons">
     <a href="{{ url_for('clothing.register') }}" class="btn btn--primary">
       📷 服を登録する
     </a>
     <a href="{{ url_for('clothing.closet') }}" class="btn btn--secondary">
-  👗 クローゼットを見る
+      👗 クローゼットを見る
     </a>
     <a href="{{ url_for('clothing.coordinate') }}" class="btn btn--primary">
-  ✨ コーディネートを作る
+      ✨ コーディネートを作る
     </a>
     <a href="{{ url_for('ootd.gallery') }}" class="btn btn--secondary">
-  📅 OOTDギャラリー   
-</a>
+      📅 OOTDギャラリー
+    </a>
   </div>
 </div>
 {% endblock %}
