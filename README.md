@@ -31,6 +31,51 @@ python app.py
 
 ## ディレクトリ構成
 
+ootd/
+│
+├── 📄 app.py                        # Flaskエントリーポイント・Blueprint登録
+├── 📄 config.py                     # 定数・設定（カテゴリ/季節/文字数上限など）
+├── 📄 database.py                   # DB初期化・セッション管理（SQLite）
+├── 📄 requirements.txt              # 使用ライブラリ一覧
+├── 📄 ootd.db                       # SQLiteデータベース（自動生成）
+│
+├── 📁 models/                       # データモデル（テーブル定義）
+│   ├── 📄 __init__.py
+│   ├── 📄 clothing.py               # 服テーブル（id/category/season/image_path）
+│   └── 📄 ootd_log.py              # OOTDログテーブル（date/weather/season/memo）
+│
+├── 📁 routes/                       # URLルーティング・ビジネスロジック
+│   ├── 📄 __init__.py
+│   ├── 📄 clothing.py               # 服の登録・一覧・削除・コーデ合成ルート
+│   └── 📄 ootd.py                  # OOTD登録・ギャラリー・削除ルート
+│
+├── 📁 services/                     # 外部処理サービス
+│   ├── 📄 __init__.py
+│   └── 📄 image_service.py         # 背景除去（rembg）・画像合成（Pillow）
+│
+├── 📁 static/                       # 静的ファイル
+│   ├── 📄 mannequin.png            # マネキンシルエット画像
+│   ├── 📁 css/
+│   │   └── 📄 style.css            # 全画面共通スタイル（ピンク・ラベンダー系）
+│   └── 📁 uploads/                 # 背景除去済み服画像・合成結果画像（自動生成）
+│       ├── 🖼 xxxxxxxx.png         # 登録した服の透過PNG
+│       └── 🖼 coord_xxxxxxxx.png   # コーデ合成結果PNG
+│
+├── 📁 templates/                    # HTMLテンプレート
+│   ├── 📄 base.html                # 共通レイアウト（ヘッダー・フラッシュメッセージ）
+│   ├── 📄 index.html               # トップ画面（ホーム）
+│   ├── 📁 clothing/
+│   │   ├── 📄 register.html        # 服の登録画面（画像アップロード）
+│   │   ├── 📄 preview.html         # 背景除去プレビュー・メタ情報入力画面
+│   │   ├── 📄 closet.html          # クローゼット一覧・フィルタ・削除画面
+│   │   ├── 📄 coordinate.html      # コーディネート服選択画面
+│   │   └── 📄 coord_result.html    # コーデ合成結果画面
+│   └── 📁 ootd/
+│       ├── 📄 register.html        # OOTD登録画面（メモ・天気・季節入力）
+│       └── 📄 gallery.html         # OOTDギャラリー一覧画面
+│
+└── 📁venv/                         # 仮想環境（Gitには含めない）
+
 ## テストケース一覧
 
 | # | テスト対象 | テスト観点 | テスト条件 | テスト手順(1行) | 期待値(1行) | 結果(○/×) |
