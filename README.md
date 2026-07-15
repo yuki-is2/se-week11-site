@@ -30,7 +30,7 @@ python app.py
 ## テスト形式
 
 ## ディレクトリ構成
-```
+```text
 ootd/
 ├── app.py                        # Flaskエントリーポイント・Blueprint登録
 ├── config.py                     # 定数・設定（カテゴリ/季節/文字数上限など）
