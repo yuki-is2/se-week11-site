@@ -30,7 +30,7 @@ python app.py
 ## テスト形式
 
 ## ディレクトリ構成
-
+、、、
 ootd/
 │
 ├── 📄 app.py                        # Flaskエントリーポイント・Blueprint登録
@@ -75,6 +75,7 @@ ootd/
 │       └── 📄 gallery.html         # OOTDギャラリー一覧画面
 │
 └── 📁venv/                         # 仮想環境（Gitには含めない）
+、、、
 
 ## テストケース一覧
 
