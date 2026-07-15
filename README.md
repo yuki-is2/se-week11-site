@@ -31,6 +31,8 @@ python app.py
 
 ・フロントエンド...HTML5 / CSS3          画面表示およびピンク・ラベンダー系を基調としたスタイリング  
 
+・データベース...SQLAlchemy 2.0.36  
+
 ・環境管理...venv / requirements.txt    Python仮想環境および依存パッケージの管理  
 
 ・画像処理...1. rembg 2.0.76                     AIによる服画像の背景自動除去機能  
